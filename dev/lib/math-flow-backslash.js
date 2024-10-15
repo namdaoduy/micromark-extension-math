@@ -1,21 +1,17 @@
 /**
- * @typedef {import('micromark-util-types').Construct} Construct
- * @typedef {import('micromark-util-types').State} State
- * @typedef {import('micromark-util-types').TokenizeContext} TokenizeContext
- * @typedef {import('micromark-util-types').Tokenizer} Tokenizer
+ * @import {Construct, State, TokenizeContext, Tokenizer} from 'micromark-util-types'
  */
 
-import {ok as assert} from 'uvu/assert'
+import {ok as assert} from 'devlop'
 import {factorySpace} from 'micromark-factory-space'
 import {markdownLineEnding} from 'micromark-util-character'
-import {codes} from 'micromark-util-symbol/codes.js'
-import {constants} from 'micromark-util-symbol/constants.js'
-import {types} from 'micromark-util-symbol/types.js'
+import {codes, constants, types} from 'micromark-util-symbol'
 
 /** @type {Construct} */
 export const mathFlow = {
   tokenize: tokenizeMathFenced,
-  concrete: true
+  concrete: true,
+  name: 'mathFlow'
 }
 
 /** @type {Construct} */
@@ -285,6 +281,7 @@ function tokenizeMathFenced(effects, ok, nok) {
     /** @type {number[]} */
     const size = []
 
+    assert(self.parser.constructs.disable.null, 'expected `disable.null`')
     /**
      * Before closing fence, at optional whitespace.
      *

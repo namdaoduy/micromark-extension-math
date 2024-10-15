@@ -1,37 +1,30 @@
 /**
- * @typedef {import('micromark-util-types').Construct} Construct
- * @typedef {import('micromark-util-types').TokenizeContext} TokenizeContext
- * @typedef {import('micromark-util-types').Tokenizer} Tokenizer
- * @typedef {import('micromark-util-types').Previous} Previous
- * @typedef {import('micromark-util-types').Resolver} Resolver
- * @typedef {import('micromark-util-types').State} State
- * @typedef {import('micromark-util-types').Token} Token
- *
- * @typedef Options
- *   Configuration.
- * @property {number} [openChar]
- * @property {number} [closeChar]
+ * @import {Options} from 'micromark-extension-math'
+ * @import {Construct, Previous, Resolver, State, Token, TokenizeContext, Tokenizer} from 'micromark-util-types'
  */
 
 // To do: next major: clean spaces in HTML compiler.
 // This has to be coordinated together with `mdast-util-math`.
 
 import {markdownLineEnding} from 'micromark-util-character'
-import {codes} from 'micromark-util-symbol/codes.js'
-import {types} from 'micromark-util-symbol/types.js'
+import {codes, types} from 'micromark-util-symbol'
 
 /**
- * @param {Options} [options]
+ * @typedef Params
+ * @property {number} openChar
+ * @property {number} closeChar
+ *
+ * @param {Params} params
+ *   Parameters
  * @returns {Construct}
+ *   Construct.
  */
-export function mathText(options) {
-  const {openChar = codes.leftParenthesis, closeChar = codes.rightParenthesis} =
-    options || {}
-
+export function mathText({openChar, closeChar}) {
   return {
     tokenize: tokenizeMathText,
     resolve: resolveMathText,
-    previous
+    previous,
+    name: 'mathText'
   }
 
   /**

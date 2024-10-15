@@ -31,6 +31,10 @@ export interface Options {
    * If you turn this off, you can use two or more dollars for text math.
    */
   singleDollarTextMath?: boolean | null | undefined
+  /**
+   * Whether to support math (text) with alternative delimiters: \(...\) and \[...\] (default: `false`).
+   */
+  enableAlternativeDelimiters?: boolean | undefined
 }
 
 /**

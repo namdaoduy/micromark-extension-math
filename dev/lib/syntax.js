@@ -5,8 +5,8 @@
 
 import {codes} from 'micromark-util-symbol'
 import {mathFlow} from './math-flow.js'
-import {mathFlow as mathFlowBackslash} from './math-flow-backslash.js'
 import {mathText} from './math-text.js'
+import {mathFlow as mathFlowBackslash} from './math-flow-backslash.js'
 import {mathText as mathTextBackslash} from './math-text-backslash.js'
 
 /**
@@ -22,20 +22,24 @@ export function math(options) {
   return {
     flow: {
       [codes.dollarSign]: mathFlow,
-      [codes.backslash]: mathFlowBackslash
+      [codes.backslash]: options?.enableAlternativeDelimiters
+        ? mathFlowBackslash
+        : undefined
     },
     text: {
       [codes.dollarSign]: mathText(options),
-      [codes.backslash]: [
-        mathTextBackslash({
-          openChar: codes.leftParenthesis,
-          closeChar: codes.rightParenthesis
-        }),
-        mathTextBackslash({
-          openChar: codes.leftSquareBracket,
-          closeChar: codes.rightSquareBracket
-        })
-      ]
+      [codes.backslash]: options?.enableAlternativeDelimiters
+        ? [
+            mathTextBackslash({
+              openChar: codes.leftParenthesis,
+              closeChar: codes.rightParenthesis
+            }),
+            mathTextBackslash({
+              openChar: codes.leftSquareBracket,
+              closeChar: codes.rightSquareBracket
+            })
+          ]
+        : undefined
     }
   }
 }
