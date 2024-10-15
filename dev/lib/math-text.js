@@ -1,33 +1,20 @@
 /**
- * @typedef {import('micromark-util-types').Construct} Construct
- * @typedef {import('micromark-util-types').TokenizeContext} TokenizeContext
- * @typedef {import('micromark-util-types').Tokenizer} Tokenizer
- * @typedef {import('micromark-util-types').Previous} Previous
- * @typedef {import('micromark-util-types').Resolver} Resolver
- * @typedef {import('micromark-util-types').State} State
- * @typedef {import('micromark-util-types').Token} Token
- *
- * @typedef Options
- *   Configuration.
- * @property {boolean | null | undefined} [singleDollarTextMath=true]
- *   Whether to support math (text) with a single dollar.
- *   Single dollars work in Pandoc and many other places, but often interfere
- *   with “normal” dollars in text.
- *   If you turn this off, you can use two or more dollars for text math.
-
+ * @import {Options} from 'micromark-extension-math'
+ * @import {Construct, Previous, Resolver, State, Token, TokenizeContext, Tokenizer} from 'micromark-util-types'
  */
 
 // To do: next major: clean spaces in HTML compiler.
 // This has to be coordinated together with `mdast-util-math`.
 
-import {ok as assert} from 'uvu/assert'
+import {ok as assert} from 'devlop'
 import {markdownLineEnding} from 'micromark-util-character'
-import {codes} from 'micromark-util-symbol/codes.js'
-import {types} from 'micromark-util-symbol/types.js'
+import {codes, types} from 'micromark-util-symbol'
 
 /**
- * @param {Options | null | undefined} [options]
+ * @param {Options | null | undefined} [options={}]
+ *   Configuration (default: `{}`).
  * @returns {Construct}
+ *   Construct.
  */
 export function mathText(options) {
   const options_ = options || {}
@@ -40,7 +27,8 @@ export function mathText(options) {
   return {
     tokenize: tokenizeMathText,
     resolve: resolveMathText,
-    previous
+    previous,
+    name: 'mathText'
   }
 
   /**
