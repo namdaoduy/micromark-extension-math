@@ -2,7 +2,7 @@ import assert from 'node:assert/strict'
 import test from 'node:test'
 import katex from 'katex'
 import {micromark} from 'micromark'
-import {math as syntax, mathHtml as html} from 'micromark-extension-math-2'
+import {math as syntax, mathHtml as html} from 'micromark-extension-math'
 
 /** @type {import('katex')['default']['renderToString']} */
 // @ts-expect-error: types are incorrect.
@@ -10,7 +10,7 @@ const renderToString = katex.renderToString
 
 test('core', async () => {
   assert.deepEqual(
-    Object.keys(await import('micromark-extension-math-2')).sort(),
+    Object.keys(await import('micromark-extension-math')).sort(),
     ['math', 'mathHtml'],
     'should expose the public api'
   )
