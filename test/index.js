@@ -502,4 +502,183 @@ test('math', async function (t) {
         '</div>\n</blockquote>'
     )
   })
+
+  await t.test(
+    '[alternative] should skip `mathFlow` and `mathText` construct if `disable.null` includes `mathFlow` and `mathText`',
+    async function () {
+      assert.equal(
+        micromark('\\(a\\), \\[b\\]\n\n\\[c\\]', {
+          extensions: [math({ enableAlternativeDelimiters: true }), { disable: { null: ['mathFlow', 'mathText'] }}],
+          htmlExtensions: [mathHtml()]
+        }),
+        '<p>\\(a\\), \\[b\\]</p>\n<p>\\[c\\]</p>'
+      )
+    }
+  )
+
+  await t.test(
+    '[alternative] should support delimiters by default',
+    async function () {
+      assert.equal(
+        micromark('\\(a\\), \\[b\\]\n\\[\nc\n\\]', {
+          extensions: [math({ enableAlternativeDelimiters: true })],
+          htmlExtensions: [mathHtml()]
+        }),
+        '<p><span class="math math-inline">' +
+          renderToString('a') +
+          '</span>, <span class="math math-inline">' +
+          renderToString('b') +
+          '</span></p>' +
+          '\n<div class="math math-display">' +
+          renderToString('c', {displayMode: true}) +
+          '</div>'
+      )
+    }
+  )
+
+  await t.test(
+    '[alternative] should support a single delimiter in math (text) with padding and two delimiters',
+    async function () {
+      assert.throws(function () {
+        micromark('a \\[ \\( \\] \\(', {
+          extensions: [math({ enableAlternativeDelimiters: true })],
+          htmlExtensions: [mathHtml()]
+        })
+      }, /KaTeX parse error: Can't use function '\\\(' in math mode at position 1/)
+    }
+  )
+
+  await t.test(
+    '[alternative] should support nested math by using more delimiters outside of math (text)',
+    async function () {
+      assert.equal(
+        micromark('a \\[\\raisebox{0.25em}{\\(\\frac a b\\)}\\] b', {
+          extensions: [math({ enableAlternativeDelimiters: true })],
+          htmlExtensions: [mathHtml()]
+        }),
+        '<p>a <span class="math math-inline">' +
+          renderToString('\\raisebox{0.25em}{\\(\\frac a b\\)}') +
+          '</span> b</p>'
+      )
+    }
+  )
+
+  await t.test(
+    '[alternative] should support an “escaped” delimiter on the KaTeX level, not the Markdown level',
+    async function () {
+      assert.equal(
+        micromark('a \\[ \\$ \\] b', {
+          extensions: [math({ enableAlternativeDelimiters: true })],
+          htmlExtensions: [mathHtml()]
+        }),
+        '<p>a <span class="math math-inline">' +
+          renderToString('\\$') +
+          '</span> b</p>'
+      )
+    }
+  )
+
+  await t.test(
+    '[alternative] should support padding with a line ending in math (text)',
+    async function () {
+      assert.equal(
+        micromark('a \\[\na\\$ \\] b', {
+          extensions: [math({ enableAlternativeDelimiters: true })],
+          htmlExtensions: [mathHtml()]
+        }),
+        '<p>a <span class="math math-inline">' +
+          renderToString('a\\$') +
+          '</span> b</p>'
+      )
+    }
+  )
+
+  await t.test(
+    '[alternative] should support math (text) with one delimiter',
+    async function () {
+      assert.equal(
+        micromark('a \\(b\\)', {
+          extensions: [math({ enableAlternativeDelimiters: true })],
+          htmlExtensions: [mathHtml()]
+        }),
+        '<p>a <span class="math math-inline">' +
+          renderToString('b') +
+          '</span></p>'
+      )
+    }
+  )
+
+  await t.test(
+    '[alternative] should support math (text) with two delimiters',
+    async function () {
+      assert.equal(
+        micromark('a \\[b\\]', {
+          extensions: [math({ enableAlternativeDelimiters: true })],
+          htmlExtensions: [mathHtml()]
+        }),
+        '<p>a <span class="math math-inline">' +
+          renderToString('b') +
+          '</span></p>'
+      )
+    }
+  )
+
+  await t.test(
+    '[alternative] should support EOLs in math',
+    async function () {
+      assert.equal(
+        micromark('a \\(b\nc\rd\r\ne\\) f', {
+          extensions: [math({ enableAlternativeDelimiters: true })],
+          htmlExtensions: [mathHtml()]
+        }),
+        '<p>a <span class="math math-inline">' +
+          renderToString('b\nc\rd\r\ne') +
+          '</span> f</p>'
+      )
+    }
+  )
+
+  await t.test(
+    '[alternative] should support math (flow) with two delimiters',
+    async function () {
+      assert.equal(
+        micromark('\\[\na\n\\]\n\n\\[\nb\n\\]', {
+          extensions: [math({ enableAlternativeDelimiters: true })],
+          htmlExtensions: [mathHtml()]
+        }),
+        '<div class="math math-display">' +
+          renderToString('a', { displayMode: true }) +
+          '</div>\n<div class="math math-display">' +
+          renderToString('b', { displayMode: true }) +
+          '</div>'
+      )
+    }
+  )
+
+  await t.test('[alternative] should support math (flow) w/o content', async function () {
+    assert.equal(
+      micromark('\\[\n\\]', {
+        extensions: [math({ enableAlternativeDelimiters: true })],
+        htmlExtensions: [mathHtml()]
+      }),
+      '<div class="math math-display">' +
+        renderToString('', { displayMode: true }) +
+        '</div>'
+    )
+  })
+
+  await t.test(
+    '[alternative] should support math (flow) w/o closing fence',
+    async function () {
+      assert.equal(
+        micromark('\\[\na', {
+          extensions: [math({ enableAlternativeDelimiters: true })],
+          htmlExtensions: [mathHtml()]
+        }),
+        '<div class="math math-display">' +
+          renderToString('a', {displayMode: true}) +
+          '</div>'
+      )
+    }
+  )
 })

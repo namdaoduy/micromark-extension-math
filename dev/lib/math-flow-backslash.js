@@ -40,15 +40,16 @@ function tokenizeMathFenced(effects, ok, nok) {
    * Start of math.
    *
    * ```markdown
-   * > | $$
+   * > | \[
    *     ^
    *   | \frac{1}{2}
-   *   | $$
+   *   | \]
    * ```
    *
    * @type {State}
    */
   function start(code) {
+    assert(code === codes.backslash, 'expected `\\`')
     effects.enter('mathFlow')
     effects.enter('mathFlowFence')
     effects.enter('mathFlowFenceSequence')
@@ -59,10 +60,10 @@ function tokenizeMathFenced(effects, ok, nok) {
    * In opening fence sequence.
    *
    * ```markdown
-   * > | $$
+   * > | \[
    *      ^
    *   | \frac{1}{2}
-   *   | $$
+   *   | \]
    * ```
    *
    * @type {State}
@@ -89,10 +90,10 @@ function tokenizeMathFenced(effects, ok, nok) {
    * In opening fence, before meta.
    *
    * ```markdown
-   * > | $$asciimath
+   * > | \[asciimath
    *       ^
    *   | x < y
-   *   | $$
+   *   | \]
    * ```
    *
    * @type {State}
@@ -112,10 +113,10 @@ function tokenizeMathFenced(effects, ok, nok) {
    * In meta.
    *
    * ```markdown
-   * > | $$asciimath
+   * > | \[asciimath
    *        ^
    *   | x < y
-   *   | $$
+   *   | \]
    * ```
    *
    * @type {State}
@@ -139,10 +140,10 @@ function tokenizeMathFenced(effects, ok, nok) {
    * After meta.
    *
    * ```markdown
-   * > | $$
+   * > | \[
    *       ^
    *   | \frac{1}{2}
-   *   | $$
+   *   | \]
    * ```
    *
    * @type {State}
@@ -166,10 +167,10 @@ function tokenizeMathFenced(effects, ok, nok) {
    * After eol/eof in math, at a non-lazy closing fence or content.
    *
    * ```markdown
-   *   | $$
+   *   | \[
    * > | \frac{1}{2}
    *     ^
-   * > | $$
+   * > | \]
    *     ^
    * ```
    *
@@ -187,10 +188,10 @@ function tokenizeMathFenced(effects, ok, nok) {
    * Before math content, definitely not before a closing fence.
    *
    * ```markdown
-   *   | $$
+   *   | \[
    * > | \frac{1}{2}
    *     ^
-   *   | $$
+   *   | \]
    * ```
    *
    * @type {State}
@@ -212,10 +213,10 @@ function tokenizeMathFenced(effects, ok, nok) {
    * Before math content, after optional prefix.
    *
    * ```markdown
-   *   | $$
+   *   | \[
    * > | \frac{1}{2}
    *     ^
-   *   | $$
+   *   | \]
    * ```
    *
    * @type {State}
@@ -241,10 +242,10 @@ function tokenizeMathFenced(effects, ok, nok) {
    * In math content.
    *
    * ```markdown
-   *   | $$
+   *   | \[
    * > | \frac{1}{2}
    *      ^
-   *   | $$
+   *   | \]
    * ```
    *
    * @type {State}
@@ -263,9 +264,9 @@ function tokenizeMathFenced(effects, ok, nok) {
    * After math (ha!).
    *
    * ```markdown
-   *   | $$
+   *   | \[
    *   | \frac{1}{2}
-   * > | $$
+   * > | \]
    *       ^
    * ```
    *
@@ -286,9 +287,9 @@ function tokenizeMathFenced(effects, ok, nok) {
      * Before closing fence, at optional whitespace.
      *
      * ```markdown
-     *   | $$
+     *   | \[
      *   | \frac{1}{2}
-     * > | $$
+     * > | \]
      *     ^
      * ```
      */
@@ -305,9 +306,9 @@ function tokenizeMathFenced(effects, ok, nok) {
      * In closing fence, after optional whitespace, at sequence.
      *
      * ```markdown
-     *   | $$
+     *   | \[
      *   | \frac{1}{2}
-     * > | $$
+     * > | \]
      *     ^
      * ```
      *
@@ -323,9 +324,9 @@ function tokenizeMathFenced(effects, ok, nok) {
      * In closing fence sequence.
      *
      * ```markdown
-     *   | $$
+     *   | \[
      *   | \frac{1}{2}
-     * > | $$
+     * > | \]
      *      ^
      * ```
      *
@@ -353,9 +354,9 @@ function tokenizeMathFenced(effects, ok, nok) {
      * After closing fence sequence, after optional whitespace.
      *
      * ```markdown
-     *   | $$
+     *   | \[
      *   | \frac{1}{2}
-     * > | $$
+     * > | \]
      *       ^
      * ```
      *
